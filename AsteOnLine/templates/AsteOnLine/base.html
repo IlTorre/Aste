@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'AsteOnLine/css/style.css' %}">
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'AsteOnLine/css/simple_menu.css' %}">
     <!--JS FILES -->
-    <script src="js/jquery.tools.min.js"></script>
+    <script src="{% static 'AsteOnLine/js/jquery.tools.min.js' %}"></script>
     <script>
     $(function () {
         $("#prod_nav ul").tabs("#panes > div", {
@@ -63,9 +63,9 @@
 
     {% block body %}
     {% endblock %}
+    <div style="clear:both; height: 40px"></div>
 
 </div>
-<!-- END container -->
 <div id="footer">
   <!-- First Column -->
   <div class="one-fourth">
