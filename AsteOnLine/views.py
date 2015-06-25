@@ -11,12 +11,15 @@ from django.views import generic
 from .models import Asta
 
 
-class IndexView(generic.ListView):
+class Home(generic.ListView):
     template_name = 'AsteOnLine/index.html'
     context_object_name = 'aste_recenti'
     print 'ciao'
+
     def get_queryset(self):
-        contenuto = 'lalala'#Asta.objects.all()
-        print contenuto
-        print 'puzzi'
+        contenuto = Asta.objects.order_by('-data_chiusura')
         return contenuto
+
+class Dettaglio(generic.DetailView):
+    model = Asta
+    template_name = 'AsteOnLine/dettaglio.html'

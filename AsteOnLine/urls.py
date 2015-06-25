@@ -1,9 +1,7 @@
 from django.conf.urls import include, url
-from django.conf import settings
-from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    url(r'^$',views.index, name='index'),
-    url(r'^index.html$',views.index, name='index')
+    url(r'^$', views.Home.as_view(), name='index'),
+    url(r'^asta(?P<pk>[0-9]+)/$', views.Dettaglio.as_view(), name='dettaglio'),
 ]
