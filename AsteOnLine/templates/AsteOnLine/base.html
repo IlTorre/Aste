@@ -29,10 +29,10 @@
 <body>
 <div class="header">
   <!-- Logo/Title -->
-  <div id="site_title"><a href="index.html"> <img src="{% static 'AsteOnLine/img/logo.jpg' %}" alt="" width="auto" height="100"></a> </div>
+  <div id="site_title"><a href="{% url 'AsteOnLine:index' %}"> <img src="{% static 'AsteOnLine/img/logo.jpg' %}" alt="" width="auto" height="100"></a> </div>
   <!-- Main Menu -->
   <ol id="menu">
-    <li class="active_menu_item"><a href="index.html" style="color:#FFF">Home</a></li>
+    <li class="active_menu_item"><a href="{% url 'AsteOnLine:index' %}" style="color:#FFF">Home</a></li>
     <!-- end sub menu -->
     <li><a href="">Categorie</a>
       <!-- sub menu -->
