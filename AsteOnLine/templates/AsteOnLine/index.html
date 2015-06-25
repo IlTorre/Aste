@@ -1,0 +1,19 @@
+{% extends "AsteOnLine/base.html" %}
+{% comment %}
+    Main page of django_mysite.
+{% endcomment %}
+
+{% block body %}
+    <header>
+        <h1>Django Mysite</h1>  </header>
+    <section>
+        <p>Welcome to Django Mysite. </p>
+        {% if aste_recenti %}
+            {% for asta in aste_recenti %}
+                <li><a href="index.html}">{{ asta.titolo }}</a></li>
+            {% endfor %}
+        {% else %}
+            <p>No aste are available.</p>
+        {% endif %}
+    </section>
+{% endblock %}
