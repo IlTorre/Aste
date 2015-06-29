@@ -6,12 +6,18 @@ import time
 import os
 from django.conf import settings
 # Create your models here.
+def get_catName(istanza,file):
+    return os.path.join('foto_categorie',
+                        str(timezone.datetime.date(timezone.now())),
+                        str(timezone.datetime.time(timezone.now())).replace(':','_').replace('.','_')+os.path.splitext(file)[1])
 
 class Categoria (models.Model):
     nome = models.CharField(max_length=20, unique=True)
+    foto = models.ImageField(upload_to=get_catName, default=settings.NO_MEDIA)
+    descrizione = models.TextField(max_length=300)
+
     def __unicode__(self):
         return self.nome
-
     class Meta:
         verbose_name_plural = 'Categorie'
 
@@ -25,12 +31,13 @@ def get_nome (istanza,file):
 class Asta (models.Model):
     creatore = models.ForeignKey(User)
     titolo = models.CharField(max_length=140)
-    descrizione = models.CharField(max_length=600)
+    descrizione = models.TextField(max_length=600)
     foto = models.ImageField(upload_to=get_nome, default=settings.NO_MEDIA)
     data_apertura = models.DateTimeField(default=timezone.now)
     data_chiusura = models.DateTimeField(default=timezone.now()+datetime.timedelta(days=7))
     categoria= models.ForeignKey(Categoria)
     base_asta = models.DecimalField(max_digits=8,decimal_places=2,default=0.10)
+
     def image_tag(self):
         return u'<p align ="center"><img src="%s" width ="100px" align ="middle"/></p>' % self.foto.url
     image_tag.short_description = 'Foto'
