@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.contrib import auth
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .models import Asta, Categoria
 
