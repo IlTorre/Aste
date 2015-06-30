@@ -17,11 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-import AsteOnLine
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^account/', include('GestioneUtenti.urls',namespace="GestioneUtenti")),
     url(r'^', include('AsteOnLine.urls',namespace="AsteOnLine"))
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

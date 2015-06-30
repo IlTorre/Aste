@@ -44,10 +44,10 @@
       </ol>
     </li>
     <!-- end sub menu -->
-    <li><a href="profilo">Area Personale</a>
+    <li><a href="{% url 'GestioneUtenti:profilo' %}">Area Personale</a>
       <!-- sub menu -->
       <ol>
-        <li><a href="login">Accedi</a></li>
+        <li><a href="{% url 'GestioneUtenti:mylogin' %}">Accedi</a></li>
         <li><a href="logout">Esci</a></li>
         <li><a href="gallery-fader.html">Fade Scroll</a></li>
         <li><a href="video.html">Video</a></li>

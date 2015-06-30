@@ -1,0 +1,23 @@
+{% extends "GestioneUtenti/base.html" %}
+{% comment %}
+    Vista per categorie
+{% endcomment %}
+
+{% block body %}
+    <div class="one-half">
+        <div class="heading_bg">
+            <h2>Benvenuto {{ request.user.username|capfirst }},</h2>
+            <p>Grazie per aver effettuato il login, ora puoi navigare liberamente per il sito</p>
+        </div>
+    </div>
+
+    <div class="one-half last">
+        <div class="heading_bg">
+            <h2>Riepilogo dati personali:</h2>
+            <p><strong>Nome:</strong> {{ request.user.first_name }}</p>
+            <p><strong>Cognome:</strong> {{ request.user.last_name }}</p>
+            <p><strong>Mail:</strong> {{ request.user.email }}</p>
+        </div>
+    </div>
+  <h4>Vuoi cambiare la password? <a href="">Clicca qui</a></h4>
+{% endblock %}

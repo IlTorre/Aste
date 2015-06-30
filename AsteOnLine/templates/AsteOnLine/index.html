@@ -24,7 +24,7 @@
             <div id="prod_nav">
                 <ul>
                     {% for asta in aste_recenti %}
-                        <li><a href="#{{ asta.id }}"><img src="media/{{ asta.foto }}" alt="" width="100px"><strong>{{ asta.titolo }}</strong> {{ asta.base_asta }} &euro;</a></li>
+                        <li><a href="#{{ asta.id }}"><img src="media/{{ asta.foto }}" alt="" width="100px"><strong>{{ asta.titolo|truncatechars_html:20 }}</strong> {{ asta.base_asta }} &euro;</a></li>
                     {% endfor %}
                 </ul>
             </div>
