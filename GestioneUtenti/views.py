@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.mail import send_mail
+from AsteOnLine.models import Asta,Puntata
 
 def mylogin(request):
     if request.method =='POST':
@@ -69,3 +70,32 @@ def attiva(request, id_utente):
 
     info={'titolo':'Account attivato con successo','corpo':'Da adesso in poi puoi navigare liberamente'}
     return render(request,'GestioneUtenti/avviso.html',info)
+
+@login_required(login_url='/account/login')
+def riepilogo(request):
+    utente=request.user
+    myaste=Asta.objects.filter(creatore=utente)
+    ast=myaste.values()
+    p=[]
+    for i in xrange(len(myaste)):
+        a=ast[i]
+        a['vincente']=Puntata.objects.filter(asta=myaste[i]).last().utente.username
+        p.append(a)
+
+
+
+    puntate=Puntata.objects.filter(utente=utente).order_by('-data')
+    dettagli=[]
+    for punt in puntate:
+        det={}
+        astx=punt.asta
+        det['offerta_corrente']=Puntata.objects.filter(asta=astx).last().importo
+        det['titolo']= punt.asta.titolo
+        det['puntata']=punt.importo
+        det['scadenza']=punt.asta.data_chiusura
+        det['vincente']= det['puntata'] == det['offerta_corrente']
+        det['id_asta']=punt.asta.pk
+        dettagli.append(det)
+
+    context={'myaste':p, 'puntate':dettagli}
+    return render(request, 'GestioneUtenti/riepilogo.html',context)

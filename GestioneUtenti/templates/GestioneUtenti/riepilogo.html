@@ -1,0 +1,67 @@
+{% extends "GestioneUtenti/base.html" %}
+{% load staticfiles %}
+{% comment %}
+    Template per avvisi
+{% endcomment %}
+
+{% block body %}
+    <div class="one last">
+    <div class="heading_bg">
+                    <h2>Le mie aste</h2>
+                </div>
+    {% if myaste %}
+        <table border="0">
+            <th>Asta</th>
+            <th>Base d'asta</th>
+            <th>Offerta attuale</th>
+            <th>Vincente</th>
+            <th>Scade il</th>
+
+            {% for asta in myaste %}
+                <tr>
+                    <td>{{ asta.titolo }}</td>
+                    <td>{{ asta.base_asta }}</td>
+                    <td>{{ asta.offerta_corrente }}</td>
+                    <td>{{ asta.vincente }}</td>
+                    <td>{{ asta.data_chiusura|date:'g/m/Y' }} {{ asta.data_chiusura|time:'H:i:s' }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <h4>Non hai inserito nessuna asta.</h4>
+    {% endif %}
+    </div>
+    <div class="one last">
+    <div class="heading_bg">
+                    <h2>Aste a cui ho partecipato</h2>
+                </div>
+        {% if puntate %}
+
+        <table border="0">
+            <th>Asta</th>
+            <th>La mia offerta</th>
+            <th>Offerta corrente</th>
+            <th>Vincente?</th>
+            <th>Scade il</th>
+
+            {% for puntata in puntate %}
+                <tr onclick="location.href='{% url 'AsteOnLine:offerta' puntata.id_asta %}'">
+                    <td>{{ puntata.titolo }}</td>
+                    <td>{{ puntata.puntata|floatformat }}</td>
+                    <td>{{ puntata.offerta_corrente }}</td>
+                    <td>
+                        {% if puntata.vincente %}
+                            <img src="{% static 'GestioneUtenti/icone/coppa.png' %}" height="30px" >
+                        {% endif %}
+                    </td>
+                    <td>{{ puntata.scadenza }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+    {% else %}
+        <h4>Non hai partecipato a nessuna asta.</h4>
+    {% endif %}
+    </div>
+{% endblock %}

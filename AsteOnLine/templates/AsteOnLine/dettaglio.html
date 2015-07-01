@@ -16,7 +16,7 @@
                 <div class="heading_bg">
                     <h2>Descrizione</h2>
                 </div>
-                <p>{{ asta.descrizione|linebreaks }}</p>
+                <p>{{ asta.descrizione|linebreaksbr }}</p>
             </div>
 
             <div class="one-half last">
@@ -26,7 +26,8 @@
 
                 <p>
                     L'asta scade il <strong>{{ asta.data_chiusura|date:"d/m/Y" }}</strong> alle
-                    <strong>{{ asta.data_chiusura|time:"H:i:s" }}</strong>
+                    <strong>{{ asta.data_chiusura|time:"H:i:s" }}</strong> <br/>
+                    Offerta attuale: <strong>{{ asta.offerta_corrente }}&euro;</strong> (incremento minimo &euro;1.00)
                 </p>
 
 

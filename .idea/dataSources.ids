@@ -7,13 +7,14 @@
     <table name="AsteOnLine_asta" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="titolo" sqlType="VARCHAR(140)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="descrizione" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="foto" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="data_apertura" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="data_chiusura" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="base_asta" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <column name="categoria_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="creatore_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="descrizione" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="offerta_corrente" sqlType="DECIMAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="data_chiusura" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_AsteOnLine_asta_1" columns="creatore_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <foreign-key name="#FAKE_AsteOnLine_asta_2" columns="categoria_id" ref-table="AsteOnLine_categoria" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>

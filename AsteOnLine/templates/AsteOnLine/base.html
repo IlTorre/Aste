@@ -4,10 +4,10 @@
     <title>Aste on line</title>
     <meta charset="utf-8">
     <!-- CSS Files -->
-    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'AsteOnLine/css/style.css' %}">
-    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'AsteOnLine/css/simple_menu.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'GestioneUtenti/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'GestioneUtenti/css/simple_menu.css' %}">
     <!--JS FILES -->
-    <script src="{% static 'AsteOnLine/js/jquery.tools.min.js' %}"></script>
+    <script src="{% static 'GestioneUtenti/js/jquery.tools.min.js' %}"></script>
     <script>
     $(function () {
         $("#prod_nav ul").tabs("#panes > div", {
@@ -19,13 +19,12 @@
 
     {% block head %}
     {% endblock %}
-
 </head>
 
 <body>
 <div class="header">
   <!-- Logo/Title -->
-  <div id="site_title"><a href="{% url 'AsteOnLine:index' %}"> <img src="{% static 'AsteOnLine/img/logo.jpg' %}" alt="" width="auto" height="100"></a> </div>
+  <div id="site_title"><a href="{% url 'AsteOnLine:index' %}"> <img src="{% static 'GestioneUtenti/img/logo.jpg' %}" alt="" width="auto" height="100"></a> </div>
   <!-- Main Menu -->
   <ol id="menu">
     <li class="active_menu_item"><a href="{% url 'AsteOnLine:index' %}" style="color:#FFF">Home</a></li>
@@ -36,10 +35,9 @@
       <!-- sub menu -->
       <ol>
         <li><a href="{% url 'GestioneUtenti:login' %}">Accedi</a></li>
+        <li><a href="{% url 'GestioneUtenti:riepilogo' %}">Le mie aste</a></li>
         <li><a href="{% url 'GestioneUtenti:logout' %}">Esci</a></li>
-        <li><a href="gallery-fader.html">Fade Scroll</a></li>
-        <li><a href="video.html">Video</a></li>
-        <li class="last"><a href="photogrid.html">PhotoGrid</a></li>
+        <li><a href="">Vuoto</a></li>
       </ol>
     </li>
     <!-- end sub menu -->
