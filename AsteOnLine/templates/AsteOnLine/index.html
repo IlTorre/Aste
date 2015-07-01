@@ -26,7 +26,7 @@
                             <img src="media/{{ asta.foto }}" alt="" width="300px">
                             <h5>{{ asta.titolo }}</h5>
                             <p>{{ asta.descrizione|linebreaksbr|truncatechars_html:180 }}</p>
-                            <p style="text-align:right; margin-right: 16px"><a href="#" class="button">Fai un'offerta</a></p>
+                            <p style="text-align:right; margin-right: 16px"><a href="{% url 'AsteOnLine:offerta' asta.id %}" class="button">Dettagli</a></p>
                         </div>
                     {% endfor %}
                 </div>
