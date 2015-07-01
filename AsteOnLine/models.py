@@ -37,6 +37,7 @@ class Asta (models.Model):
     data_chiusura = models.DateTimeField(default=timezone.now()+datetime.timedelta(days=7))
     categoria= models.ForeignKey(Categoria)
     base_asta = models.DecimalField(max_digits=8,decimal_places=2,default=0.10)
+    offerta_corrente = models.DecimalField(max_digits=8,decimal_places=2,default=0.00)
 
     def image_tag(self):
         return u'<p align ="center"><img src="%s" width ="100px" align ="middle"/></p>' % self.foto.url

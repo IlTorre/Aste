@@ -11,7 +11,7 @@ from django.contrib import auth
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
-from .models import Asta, Categoria
+from .models import Asta, Categoria,Puntata
 
 
 class Home(generic.ListView):
@@ -27,22 +27,18 @@ class Categorie (generic.ListView):
     def get_queryset(self):
         return Categoria.objects.all().order_by('nome')
 
-class Dettaglio(generic.DetailView):
-    model = Asta
-    template_name = 'AsteOnLine/dettaglio.html'
+@login_required(login_url='/account/login')
+def offerta(request,id_asta):
+    asta=get_object_or_404(Asta,pk=id_asta)
+    if request.method=='POST':
+        off=request.POST["offerta"]
+        asta.offerta_corrente=off
+        asta.save()
+        puntata=Puntata.objects.create(asta=asta,utente=request.user,importo=off)
+        puntata.save()
 
-def login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
-        user = auth.authenticate(username = username, password = password)
-        if user is not None:
-            if user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('home'))
-            else:
-                return HttpResponseRedirect('/accounts/inattivo')
-        else:
-            return HttpResponseRedirect('/accounts/non_valido')
+        return HttpResponseRedirect('/account/')
+
     else:
-        return HttpResponse(loader.get_template('AsteOnLine/login.html').render())
+        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta})
+

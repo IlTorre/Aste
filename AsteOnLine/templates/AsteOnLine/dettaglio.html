@@ -4,20 +4,54 @@
 {% endcomment %}
 
 {% block body %}
-    <header>
-        <h1>Django Mysite</h1>  </header>
-    <section>
-        <p>Welcome to Django Mysite. </p>
-        {% if aste_recenti %}
-            <div id="prod_nav">
-                <ul>
-                    {% for asta in aste_recenti %}
-                        <li><a href="{% url 'GestioneUtenti:dettaglio' asta.id %}"><img src="media/{{ asta.foto }}" alt="" width="100px"><strong>{{ asta.titolo }}</strong> {{ asta.base_asta }} &euro;</a></li>
-                    {% endfor %}
-                </ul>
+        {% if asta %}
+            <div style="margin-bottom: 15px" xmlns="http://www.w3.org/1999/html">
+                <img  src="../media/{{ asta.foto }}" alt="" width="960" height="450">
             </div>
+            <div style="clear:both">
+            </div>
+            <h1 style="padding: 20px 0">{{ asta.titolo }}</h1>
+
+            <div class="one-half">
+                <div class="heading_bg">
+                    <h2>Descrizione</h2>
+                </div>
+                <p>{{ asta.descrizione|linebreaks }}</p>
+            </div>
+
+            <div class="one-half last">
+                <div class="heading_bg">
+                    <h2>Informazioni asta</h2>
+                </div>
+
+                <p>
+                    L'asta scade il <strong>{{ asta.data_chiusura|date:"d/m/Y" }}</strong> alle
+                    <strong>{{ asta.data_chiusura|time:"H:i:s" }}</strong>
+                </p>
+
+
+                <form action="" id="offerta_form" method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <label>Offerta</label>
+                        {%  if asta.base_asta > asta.offerta_corrente %}
+                            <input type="number" step="0.01" name="offerta" min="{{asta.base_asta|floatformat }}"
+                                   value="{{ asta.base_asta|floatformat }}" width="30">
+                        {% else %}
+                            <input type="number" step="0.01" name="offerta" min="{{asta.offerta_corrente|floatformat|add:1}}"
+                                   value="{{ asta.offerta_corrente|floatformat|add:1 }}" width="30">
+                        {% endif %}
+                        <p style="text-align:right; margin-right: 16px">
+                            <input name="Mysubmitted" value="Fai l'offerta" class="button white" type="submit"
+                                   onClick="return confirm('Stai facendo un offerta vincolante. Continuare?')">
+                        </p>
+                    </fieldset>
+                </form>
+            </div>
+
+
         {% else %}
-            <p>Non ci sono aste disponibili</p>
+            <p>Asta inesistente</p>
         {% endif %}
     </section>
 {% endblock %}

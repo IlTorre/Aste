@@ -121,6 +121,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/media/'
 
+ATTIVA_URL= '/account/attiva/'
+
 NO_MEDIA='no_image.jpg'
 
 # Additional locations of static files

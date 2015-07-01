@@ -11,7 +11,7 @@ class TutteAste (admin.ModelAdmin):
         ('Opzioni asta:',{'fields':['base_asta','data_apertura','data_chiusura']})
     ]
     readonly_fields = ( 'image_tag', )
-    list_display = ('image_tag','titolo','creatore','data_apertura','data_chiusura','attiva','base_asta')
+    list_display = ('image_tag','titolo','creatore','data_apertura','data_chiusura','attiva','base_asta','offerta_corrente')
     ordering = ['-data_chiusura','data_apertura']
 
 admin.site.register(Asta,TutteAste)

@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.core.mail import send_mail
 
 def mylogin(request):
     if request.method =='POST':
@@ -36,6 +37,11 @@ def registrazione(request):
             user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name)
             user.is_active=False
             user.save()
+            subject = 'Attivazione account'
+            message = 'Attivami'
+            sender = 'prova@prova.it'
+            recipients=[email]
+            send_mail(subject, message, sender, recipients)
             info={'titolo':'Utente registrato correttamente','corpo':'Verifica la mail per attivare il tuo account'}
             return render(request, 'GestioneUtenti/avviso.html',info)
         except IntegrityError:
