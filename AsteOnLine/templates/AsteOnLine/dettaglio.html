@@ -5,13 +5,8 @@
 
 {% block body %}
         {% if asta %}
-            <div style="margin-bottom: 15px" xmlns="http://www.w3.org/1999/html">
-                <img  src="../media/{{ asta.foto }}" alt="" width="960" height="450">
-            </div>
-            <div style="clear:both">
-            </div>
-            <h1 style="padding: 20px 0">{{ asta.titolo }}</h1>
-
+            <h1>{{ asta.titolo }}</h1>
+            <img  src="../media/{{ asta.foto }}" alt="" width="960" height="450">
             <div class="one-half">
                 <div class="heading_bg">
                     <h2>Descrizione</h2>

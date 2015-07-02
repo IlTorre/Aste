@@ -23,7 +23,7 @@
                 <div id="panes">
                     {% for asta in aste_recenti %}
                         <div>
-                            <img src="media/{{ asta.foto }}" alt="" width="300px">
+                            <img src="media/{{ asta.foto }}" alt="" width="379px"height="225">
                             <h5>{{ asta.titolo }}</h5>
                             <p>{{ asta.descrizione|linebreaksbr|truncatechars_html:180 }}</p>
                             <p style="text-align:right; margin-right: 16px"><a href="{% url 'AsteOnLine:offerta' asta.id %}" class="button">Dettagli</a></p>
@@ -34,13 +34,16 @@
             <div id="prod_nav">
                 <ul>
                     {% for asta in aste_recenti %}
-                        <li><a href="#{{ asta.id }}"><img src="media/{{ asta.foto }}" alt="" width="100px"><strong>{{ asta.titolo|truncatechars_html:20 }}</strong>
+                        <li><a href="#{{ asta.id }}"><img src="media/{{ asta.foto }}" alt="" width="75px" height="75">
+                            <strong>{{ asta.titolo|truncatechars_html:20 }}</strong>
                             {% if asta.base_asta > asta.offerta_corrente %}
                                 {{ asta.base_asta }}
                             {% else %}
                                 {{ asta.offerta_corrente }}
                             {% endif %}
-                            &euro;</a></li>
+                            &euro;
+                        </a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

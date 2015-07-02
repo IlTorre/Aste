@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^logout/$', views.mylogout, name='logout'),
     url(r'^registrazione/$',views.registrazione, name='registrazione'),
     url(r'^attiva/(?P<id_utente>[0-9]+)/$',views.attiva, name='attivazione'),
-    url(r'^riepilogo/$',views.riepilogo, name='riepilogo')
+    url(r'^riepilogo/$',views.riepilogo, name='riepilogo'),
+    url(r'^nuovaasta/$',views.nuovaAsta, name='nuovaasta')
 
     ]

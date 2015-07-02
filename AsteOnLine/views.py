@@ -10,6 +10,7 @@ from django.views import generic
 from django.contrib import auth
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from .models import Asta, Categoria,Puntata
 
@@ -31,14 +32,19 @@ class Categorie (generic.ListView):
 def offerta(request,id_asta):
     asta=get_object_or_404(Asta,pk=id_asta)
     if request.method=='POST':
-        off=request.POST["offerta"]
-        asta.offerta_corrente=off
-        asta.save()
-        puntata=Puntata.objects.create(asta=asta,utente=request.user,importo=off)
-        puntata.save()
-
-        return HttpResponseRedirect('/account/')
-
+        if request.user == asta.creatore:
+            info={'titolo':'Operazione non permessa','corpo':'Non puoi votare alle tue aste'}
+            return render(request,'GestioneUtenti/avviso.html',info)
+        elif asta.data_chiusura < timezone.now():
+            info={'titolo':'Operazione non permessa','corpo':'Non puoi votare a un asta scaduta'}
+            return render(request,'GestioneUtenti/avviso.html',info)
+        else:
+            off=request.POST["offerta"]
+            asta.offerta_corrente=off
+            asta.save()
+            puntata=Puntata.objects.create(asta=asta,utente=request.user,importo=off)
+            puntata.save()
+            return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
     else:
         return render(request,'AsteOnLine/dettaglio.html',{'asta':asta})
 

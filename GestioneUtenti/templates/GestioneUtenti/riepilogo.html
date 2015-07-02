@@ -9,6 +9,7 @@
     <div class="heading_bg">
                     <h2>Le mie aste</h2>
                 </div>
+    <p align="right"><a href="{% url 'GestioneUtenti:nuovaasta' %}" class="button">Inserisci una nuova asta</a> </p>
     {% if myaste %}
         <table border="0">
             <th>Asta</th>
@@ -23,7 +24,7 @@
                     <td>{{ asta.base_asta }}</td>
                     <td>{{ asta.offerta_corrente }}</td>
                     <td>{{ asta.vincente }}</td>
-                    <td>{{ asta.data_chiusura|date:'g/m/Y' }} {{ asta.data_chiusura|time:'H:i:s' }}</td>
+                    <td>{{ asta.data_chiusura }}</td>
                 </tr>
             {% endfor %}
         </table>

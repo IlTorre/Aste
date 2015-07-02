@@ -6,7 +6,10 @@ from django.shortcuts import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.mail import send_mail
-from AsteOnLine.models import Asta,Puntata
+from AsteOnLine.models import Asta,Puntata,Categoria
+from django.core.urlresolvers import reverse
+from forms import carica_foto
+import datetime
 
 def mylogin(request):
     if request.method =='POST':
@@ -56,7 +59,7 @@ def registrazione(request):
 
 def mylogout (request):
     logout(request)
-    return render(request,'GestioneUtenti/login.html',{'messaggio':'Logout eseguito correttamente.'})
+    return HttpResponseRedirect(reverse('GestioneUtenti:login'))
 
 
 @login_required(login_url='/account/login')
@@ -79,11 +82,11 @@ def riepilogo(request):
     p=[]
     for i in xrange(len(myaste)):
         a=ast[i]
-        a['vincente']=Puntata.objects.filter(asta=myaste[i]).last().utente.username
+        try:
+            a['vincente']=Puntata.objects.filter(asta=myaste[i]).last().utente.username
+        except AttributeError:
+            a['vincente']=""
         p.append(a)
-
-
-
     puntate=Puntata.objects.filter(utente=utente).order_by('-data')
     dettagli=[]
     for punt in puntate:
@@ -99,3 +102,35 @@ def riepilogo(request):
 
     context={'myaste':p, 'puntate':dettagli}
     return render(request, 'GestioneUtenti/riepilogo.html',context)
+
+@login_required(login_url='/account/login')
+def nuovaAsta(request):
+    if request.method == 'GET':
+        categorie=Categoria.objects.all().values()
+        context={}
+        context['categorie']=categorie
+        form=carica_foto()
+        context['form']=form
+        return render(request, 'GestioneUtenti/nuova_asta.html',context)
+    else:
+        form= carica_foto(request.POST,request.FILES)
+        asta=form.save(commit=False)
+        asta.creatore=request.user
+        asta.base_asta=request.POST['base_asta']
+        data_c=request.POST['data_chiusura']
+        a,m,g=str(data_c).split('-')
+        a=int(a)
+        m=int(m)
+        g=int(g)
+        data_c=datetime.date(a,m,g)
+        ora_c=request.POST['ora_chiusura']
+        h,m=str(ora_c).split(':')
+        h= int(h)
+        m=int(m)
+        ora_c=datetime.time(h,m)
+        data=datetime.datetime.combine(data_c,ora_c)
+        asta.data_chiusura=data
+        asta.save()
+        return HttpResponse(data)
+
+        return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
