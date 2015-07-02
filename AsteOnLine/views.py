@@ -20,7 +20,12 @@ class Home(generic.ListView):
     context_object_name = 'aste_recenti'
     def get_queryset(self):
         contenuto = Asta.objects.order_by('-data_chiusura')
-        return contenuto[:10]
+        p=[]
+        for a in contenuto:
+            if a.attiva():
+                p.append(a)
+
+        return p[:10]
 
 class Categorie (generic.ListView):
     template_name = 'AsteOnLine/categorie.html'
@@ -46,5 +51,19 @@ def offerta(request,id_asta):
             puntata.save()
             return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
     else:
-        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta})
+        attiva=asta.attiva()
+        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva})
 
+def dettaglio_categoria(request,id_categoria):
+    aste=Asta.objects.filter(categoria=id_categoria).order_by('-data_apertura')
+    l=[]
+    for a in aste:
+        if a.attiva():
+            l.append(a)
+
+
+    categoria=get_object_or_404(Categoria,pk=id_categoria)
+
+    context={'aste':l,'categoria':categoria}
+
+    return render(request,'AsteOnLine/dettaglio_categoria.html',context)

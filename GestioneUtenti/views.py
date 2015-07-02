@@ -10,6 +10,7 @@ from AsteOnLine.models import Asta,Puntata,Categoria
 from django.core.urlresolvers import reverse
 from forms import carica_foto
 import datetime
+from django.utils import timezone
 
 def mylogin(request):
     if request.method =='POST':
@@ -55,7 +56,7 @@ def registrazione(request):
         if request.user.is_anonymous():
             return render(request,'GestioneUtenti/registrazione.html')
         else:
-            return HttpResponseRedirect('/account')
+            return HttpResponseRedirect(reverse(As))
 
 def mylogout (request):
     logout(request)
@@ -95,7 +96,10 @@ def riepilogo(request):
         det['offerta_corrente']=Puntata.objects.filter(asta=astx).last().importo
         det['titolo']= punt.asta.titolo
         det['puntata']=punt.importo
-        det['scadenza']=punt.asta.data_chiusura
+        if punt.asta.data_chiusura <= timezone.now():
+            det['scadenza']='scaduta'
+        else:
+            det['scadenza']=punt.asta.data_chiusura
         det['vincente']= det['puntata'] == det['offerta_corrente']
         det['id_asta']=punt.asta.pk
         dettagli.append(det)

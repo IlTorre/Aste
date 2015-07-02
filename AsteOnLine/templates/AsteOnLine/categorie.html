@@ -11,10 +11,12 @@
         {% else %}
             <div class="one-third">
         {% endif %}
+            <a href="{% url 'AsteOnLine:dettagliocategoria' categoria.id %}">
             <div class="heading_bg">
                 <h2>{{ categoria.nome|capfirst }}</h2>
             </div>
             <img src="media/{{ categoria.foto }}" alt="" width="300px" >
+            </a>
             <p> {{ categoria.descrizione|truncatechars_html:73 }}</p>
         </div>
     {% endfor %}

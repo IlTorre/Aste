@@ -1,0 +1,31 @@
+{% extends "AsteOnLine/base.html" %}
+{% comment %}
+    Vista per categorie
+{% endcomment %}
+
+{% block body %}
+    <h1>{{ categoria.nome|capfirst }}</h1>
+    <h4>
+    {{ categoria.descrizione }}
+    </h4>
+    <div style="clear:both; height: 40px"></div>
+    {% if aste %}
+        {% for asta in aste %}
+            {% if forloop.counter|divisibleby:3 %}
+                <div class="one-third last">
+            {% else %}
+                <div class="one-third">
+            {% endif %}
+                <a href="{% url 'AsteOnLine:offerta' asta.id %}">
+                <div class="heading_bg">
+                    <h2>{{ asta.titolo|capfirst }}</h2>
+                </div>
+                <img src="../../media/{{ asta.foto }}" alt="" width="300px" >
+                </a>
+                <p> {{ asta.descrizione|truncatechars_html:73 }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Non ci sono aste attive in questa categoria</p>
+    {% endif %}
+{% endblock %}
