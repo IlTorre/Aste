@@ -8,11 +8,12 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.contrib import auth
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.core.mail import send_mail
+from forms import ContactForm
 
-from .models import Asta, Categoria,Puntata
+from .models import Asta, Categoria, Puntata
 
 
 class Home(generic.ListView):
@@ -60,10 +61,33 @@ def dettaglio_categoria(request,id_categoria):
     for a in aste:
         if a.attiva():
             l.append(a)
-
-
     categoria=get_object_or_404(Categoria,pk=id_categoria)
 
     context={'aste':l,'categoria':categoria}
 
     return render(request,'AsteOnLine/dettaglio_categoria.html',context)
+'''
+def contatti (request):
+    return render(request,'AsteOnLine/contatti.html')
+'''
+def contatti (request):
+    if request.method == 'POST': # If the form has been submitted...
+        form = ContactForm(request.POST) #form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            subject = form.cleaned_data['oggetto']
+            message = form.cleaned_data['messaggio']
+            sender = form.cleaned_data['email']
+            cc_myself = form.cleaned_data['invia_una_copia_a_me_stesso']
+            recipients = ['noreply.asteonline@gmail.com']
+            message=message+'\n\nModulo inviato da: '+sender
+            if cc_myself:
+                recipients.append(sender)
+	    send_mail(subject, message, sender, recipients)
+            context={'titolo':'Messaggio inviato','corpo':"La tua richiesta e' stata registrata."}
+            return render(request,'GestioneUtenti/avviso.html',context) # Redirect after POST
+        else:
+	    return HttpResponse('Data not valid')
+    else:  # GET request: just visualize the form
+        form = ContactForm() # An unbound form
+        return render(request, 'AsteOnLine/contatti.html', { 'form': form })

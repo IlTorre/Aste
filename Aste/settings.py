@@ -135,3 +135,15 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
 )
+
+DEFAULT_FROM_EMAIL = "noreply.asteonline@gmail.com"
+
+EMAIL_HOST = "smtp.gmail.com"
+
+EMAIL_HOST_USER = "noreply.asteonline@gmail.com"
+
+EMAIL_HOST_PASSWORD = "aste1234"
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True

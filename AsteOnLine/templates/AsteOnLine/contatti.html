@@ -1,0 +1,43 @@
+{% extends "AsteOnLine/base.html" %}
+
+{% block head %}
+    <script
+            src="http://maps.googleapis.com/maps/api/js">
+    </script>
+
+    <script>
+        function initialize()
+        {
+          var mapProp = {
+            center:new google.maps.LatLng(44.632509, 10.944699),
+            zoom:17,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="one-half">
+        <div class="heading_bg">
+            <h2>Dove siamo</h2>
+            <div id="googleMap" style="width:400px;height:300px;"></div><br />
+            <strong>Dipartimento di Scienze Fisiche Informatiche e Matematiche</strong> <br/>
+            <strong>Indirizzo:</strong> Via Giuseppe Campi, 213/a, 41125 Modena MO <br />
+            <strong>Telefono:</strong> 059 205 5243
+        </div>
+    </div>
+
+    <div class="one-half last">
+        <div class="heading_bg">
+            <h2>Contattaci:</h2>
+            <form  method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            <input type="submit" value="Invia" />
+</form>
+        </div>
+    </div>
+{% endblock %}

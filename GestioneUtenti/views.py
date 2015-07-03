@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from forms import carica_foto
 import datetime
 from django.utils import timezone
+from django.conf import settings
 
 def mylogin(request):
     if request.method =='POST':
@@ -43,8 +44,9 @@ def registrazione(request):
             user.is_active=False
             user.save()
             subject = 'Attivazione account'
-            message = 'Attivami'
-            sender = 'prova@prova.it'
+            link = 'http://127.0.0.1:8000/account/attiva/'+str(user.id)
+            message = 'Attiva il tuo account visitando:\n'+link
+            sender = 'noreply.asteonline@gmail.com'
             recipients=[email]
             send_mail(subject, message, sender, recipients)
             info={'titolo':'Utente registrato correttamente','corpo':'Verifica la mail per attivare il tuo account'}
@@ -56,7 +58,7 @@ def registrazione(request):
         if request.user.is_anonymous():
             return render(request,'GestioneUtenti/registrazione.html')
         else:
-            return HttpResponseRedirect(reverse(As))
+            return HttpResponseRedirect(reverse('GestioneUtenti:profilo'))
 
 def mylogout (request):
     logout(request)
@@ -83,6 +85,9 @@ def riepilogo(request):
     p=[]
     for i in xrange(len(myaste)):
         a=ast[i]
+        print a
+        if a['data_chiusura']<=timezone.now():
+            a['data_chiusura']='Scaduta'
         try:
             a['vincente']=Puntata.objects.filter(asta=myaste[i]).last().utente.username
         except AttributeError:
@@ -97,7 +102,7 @@ def riepilogo(request):
         det['titolo']= punt.asta.titolo
         det['puntata']=punt.importo
         if punt.asta.data_chiusura <= timezone.now():
-            det['scadenza']='scaduta'
+            det['scadenza']='Scaduta'
         else:
             det['scadenza']=punt.asta.data_chiusura
         det['vincente']= det['puntata'] == det['offerta_corrente']
