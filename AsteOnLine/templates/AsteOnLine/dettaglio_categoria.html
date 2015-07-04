@@ -18,7 +18,7 @@
             {% endif %}
                 <a href="{% url 'AsteOnLine:offerta' asta.id %}">
                 <div class="heading_bg">
-                    <h2>{{ asta.titolo|capfirst }}</h2>
+                    <h2>{{ asta.titolo|lower|capfirst|truncatechars_html:30}}</h2>
                 </div>
                 <img src="../../media/{{ asta.foto }}" alt="" width="300px" >
                 </a>

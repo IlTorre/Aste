@@ -19,7 +19,7 @@
             <th>Scade il</th>
 
             {% for asta in myaste %}
-                <tr>
+                <tr onclick="location.href='{% url 'AsteOnLine:offerta' asta.id %}'">
                     <td>{{ asta.titolo }}</td>
                     <td>{{ asta.base_asta }}</td>
                     <td>{{ asta.offerta_corrente }}</td>

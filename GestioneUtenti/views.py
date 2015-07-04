@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
@@ -70,6 +70,7 @@ def portal_main_page(request):
     return render_to_response('GestioneUtenti/profilo.html',{'request':request})
 
 def attiva(request, id_utente):
+    user=get_object_or_404(User,pk=id_utente)
     user = User.objects.get(pk=id_utente)
     user.is_active=True
     user.save()
@@ -115,31 +116,28 @@ def riepilogo(request):
 @login_required(login_url='/account/login')
 def nuovaAsta(request):
     if request.method == 'GET':
-        categorie=Categoria.objects.all().values()
-        context={}
-        context['categorie']=categorie
         form=carica_foto()
-        context['form']=form
-        return render(request, 'GestioneUtenti/nuova_asta.html',context)
+        return render(request, 'GestioneUtenti/nuova_asta.html',{'form':form})
     else:
         form= carica_foto(request.POST,request.FILES)
-        asta=form.save(commit=False)
-        asta.creatore=request.user
-        asta.base_asta=request.POST['base_asta']
-        data_c=request.POST['data_chiusura']
-        a,m,g=str(data_c).split('-')
-        a=int(a)
-        m=int(m)
-        g=int(g)
-        data_c=datetime.date(a,m,g)
-        ora_c=request.POST['ora_chiusura']
-        h,m=str(ora_c).split(':')
-        h= int(h)
-        m=int(m)
-        ora_c=datetime.time(h,m)
-        data=datetime.datetime.combine(data_c,ora_c)
-        asta.data_chiusura=data
-        asta.save()
-        return HttpResponse(data)
-
-        return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
+        if form.is_valid():
+            asta=form.save(commit=False)
+            asta.creatore=request.user
+            asta.base_asta=request.POST['base_asta']
+            data_c=request.POST['data_chiusura']
+            a,m,g=str(data_c).split('-')
+            a=int(a)
+            m=int(m)
+            g=int(g)
+            data_c=datetime.date(a,m,g)
+            ora_c=request.POST['ora_chiusura']
+            h,m=str(ora_c).split(':')
+            h= int(h)
+            m=int(m)
+            ora_c=datetime.time(h,m)
+            data=datetime.datetime.combine(data_c,ora_c)
+            asta.data_chiusura=data
+            asta.save()
+            return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
+        else:
+            return render(request,'GestioneUtenti/nuova_asta.html',{'form':form,'messaggio':'Devi compilare i campi obbligatori'})

@@ -33,6 +33,11 @@
     <div class="one-half last">
         <div class="heading_bg">
             <h2>Contattaci:</h2>
+            {% if messaggio %}
+                <p class="required">{{ messaggio }}</p>
+            {% else %}
+                <p> <br /> </p>
+            {% endif %}
             <form  method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

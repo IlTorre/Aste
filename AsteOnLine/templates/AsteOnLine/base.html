@@ -7,15 +7,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'GestioneUtenti/css/style.css' %}">
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'GestioneUtenti/css/simple_menu.css' %}">
     <!--JS FILES -->
-    <script src="{% static 'GestioneUtenti/js/jquery.tools.min.js' %}"></script>
-    <script>
-    $(function () {
-        $("#prod_nav ul").tabs("#panes > div", {
-            effect: 'fade',
-            fadeOutSpeed: 400
-        });
-    });
-    </script>
+
 
     {% block head %}
     {% endblock %}
@@ -53,38 +45,40 @@
 
 </div>
 <div id="footer">
-  <!-- First Column -->
-  <div class="one-fourth">
-    <h3>Useful Links</h3>
-    <ul class="footer_links">
-      <li><a href="#">Lorem Ipsum</a></li>
-      <li><a href="#">Ellem Ciet</a></li>
-      <li><a href="#">Currivitas</a></li>
-      <li><a href="#">Salim Aritu</a></li>
-    </ul>
-  </div>
-  <!-- Second Column -->
-  <div class="one-fourth">
-    <h3>Terms</h3>
-    <ul class="footer_links">
-      <li><a href="#">Lorem Ipsum</a></li>
-      <li><a href="#">Ellem Ciet</a></li>
-      <li><a href="#">Currivitas</a></li>
-      <li><a href="#">Salim Aritu</a></li>
-    </ul>
-  </div>
-  <!-- Third Column -->
-  <div class="one-fourth">
-    <h3>Information</h3>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit amet enim id dui tincidunt vestibulum rhoncus a felis.
-    <div id="social_icons"> Theme by <a href="http://www.csstemplateheaven.com">CssTemplateHeaven</a><br>
-      Photos © <a href="http://dieterschneider.net">Dieter Schneider</a> </div>
-  </div>
-  <!-- Fourth Column -->
-  <div class="one-fourth last">
-    <h3>Socialize</h3>
-    <img src="{% static 'AsteOnLine/img/icon_fb.png' %}" alt=""> <img src="{% static 'AsteOnLine/img/icon_twitter.png' %}" alt=""> <img src="{% static 'AsteOnLine/img/icon_in.png' %}" alt=""> </div>
-  <div style="clear:both"></div>
+    <div class="one-fourth">
+        <h3>Su di noi</h3>
+        Questo sito &egrave; stato realizzato da:
+        <ul class="footer_links">
+            <li><a href="https://github.com/IlTorre/" target="_blank">Marco Torreggiani</a></li>
+            <li><a href="https://github.com/B1gEyedF1sh" target="_blank">Alberto Vezzani</a></li>
+        </ul>
+    </div>
+
+    <div class="one-fourth">
+        <h3>Mappa del sito</h3>
+        <ul class="footer_links">
+            <li><a href="{% url 'AsteOnLine:index' %}">Home</a></li>
+            <li><a href="{% url 'AsteOnLine:categorie' %}">Categorie</a></li>
+            <li>
+                <a href="{% url 'GestioneUtenti:profilo' %}" >Account</a><br />
+                    <a href="{% url 'GestioneUtenti:registrazione' %}">&nbsp;&nbsp;Registrati</a><br />
+                    <a href="{% url 'GestioneUtenti:riepilogo' %}">&nbsp;&nbsp;Le mie aste</a><br />
+                    <a href="{% url 'GestioneUtenti:nuovaasta' %}">&nbsp;&nbsp;&nbsp;&nbsp;Inserisci asta</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="one-fourth">
+        <h3>Termini e condizioni</h3>
+        Sito realizzato a scopo didattico, non va considerato un vero sito di acquisto online.
+    </div>
+
+    <div class="one-fourth last">
+        <h3>Contattaci</h3>
+        Per contattare l'amministratore clicca <a href="{% url 'AsteOnLine:contatti' %}">qui</a>
+    </div>
+
+<div style="clear:both"></div>
 </div>
 <!-- END footer -->
 </body>

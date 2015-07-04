@@ -33,7 +33,7 @@ class Asta (models.Model):
     descrizione = models.TextField(max_length=600)
     foto = models.ImageField(upload_to=get_nome, default=settings.NO_MEDIA)
     data_apertura = models.DateTimeField(default=timezone.now)
-    data_chiusura = models.DateTimeField(default=timezone.now()+datetime.timedelta(days=7))
+    data_chiusura = models.DateTimeField(default=timezone.now()+datetime.timedelta(days=1))
     categoria= models.ForeignKey(Categoria)
     base_asta = models.DecimalField(max_digits=8,decimal_places=2,default=0.10)
     offerta_corrente = models.DecimalField(max_digits=8,decimal_places=2,default=0.00)

@@ -123,7 +123,7 @@ MEDIA_URL = '/media/'
 
 ATTIVA_URL= '/account/attiva/'
 
-NO_MEDIA='no_image.jpg'
+NO_MEDIA='no_image.png'
 
 # Additional locations of static files
 STATICFILES_DIRS = (

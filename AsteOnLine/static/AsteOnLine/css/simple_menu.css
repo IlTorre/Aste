@@ -15,7 +15,6 @@
 #menu_top {
 	    width: 960px;
         margin: 0 auto 0;
-		background:;
 }
 
 #menu_top:before,
@@ -349,7 +348,6 @@
 
 #menu2 {
         margin: 22px auto 0;
-		background:;
 }
 
 #menu2:before,
@@ -403,7 +401,7 @@
         left: 0;
         z-index: 9999;
 		border: 1px solid #525c67;
-        background: url(../../img/dropmenu_bg.png) repeat;
+        background: url(../img/dropmenu_bg.png) repeat;
         -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,.5);
         box-shadow: 0 3px 10px rgba(0,0,0,.7);
         -moz-border-radius: 5px;
