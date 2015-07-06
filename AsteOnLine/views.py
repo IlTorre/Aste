@@ -139,5 +139,9 @@ def offerta(request,id_asta):
             if a.attiva():
                 aste_correlate.append(a)
         if len(aste_correlate)>0:
-            aste_correlate.remove(Asta.objects.filter(pk=id_asta).last())
+            try:
+                aste_correlate.remove(Asta.objects.filter(pk=id_asta).last())
+            except ValueError:
+                pass
+
         return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate})

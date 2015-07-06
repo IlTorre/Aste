@@ -5,7 +5,7 @@
 
 {% block body %}
         {% if asta %}
-            <h1>{{ asta.titolo|capfirst }}</h1>
+            <h1 xmlns="http://www.w3.org/1999/html">{{ asta.titolo|capfirst }}</h1>
             <img  src="../media/{{ asta.foto }}" alt="" width="960" height="450">
             <div class="one-half">
                 <div class="heading_bg">
@@ -47,7 +47,7 @@
                         </fieldset>
                     </form>
                 {% else %}
-                    <p>Offerta scaduta </p>
+                    <strong><h4>Offerta scaduta </h4></strong>
                 {% endif %}
             </div>
 
