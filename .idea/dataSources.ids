@@ -25,8 +25,8 @@
     <table name="AsteOnLine_categoria" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="nome" sqlType="VARCHAR(20)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="foto" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="descrizione" sqlType="TEXT" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="foto" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
       <exported-key name="#FAKE_AsteOnLine_asta_2" table="AsteOnLine_asta" schema="" catalog="" columns="categoria_id"/>
     </table>
@@ -41,6 +41,13 @@
       <foreign-key name="#FAKE_AsteOnLine_puntata_2" columns="asta_id" ref-table="AsteOnLine_asta" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="AsteOnLine_puntata_f623f614" unique="true" columns="utente_id"/>
       <index name="AsteOnLine_puntata_2c9d171f" unique="true" columns="asta_id"/>
+    </table>
+    <table name="GestioneUtenti_key" schema="" catalog="" type="TABLE">
+      <column name="utente_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="key" sqlType="VARCHAR(100)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <primary-key columns="key"/>
+      <foreign-key name="#FAKE_GestioneUtenti_key_1" columns="utente_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="GestioneUtenti_key_f623f614" unique="true" columns="utente_id"/>
     </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -85,6 +92,7 @@
       <primary-key columns="id"/>
       <exported-key name="#FAKE_AsteOnLine_asta_1" table="AsteOnLine_asta" schema="" catalog="" columns="creatore_id"/>
       <exported-key name="#FAKE_AsteOnLine_puntata_1" table="AsteOnLine_puntata" schema="" catalog="" columns="utente_id"/>
+      <exported-key name="#FAKE_GestioneUtenti_key_1" table="GestioneUtenti_key" schema="" catalog="" columns="utente_id"/>
       <exported-key name="#FAKE_auth_user_groups_2" table="auth_user_groups" schema="" catalog="" columns="user_id"/>
       <exported-key name="#FAKE_auth_user_user_permissions_2" table="auth_user_user_permissions" schema="" catalog="" columns="user_id"/>
       <exported-key name="#FAKE_django_admin_log_1" table="django_admin_log" schema="" catalog="" columns="user_id"/>

@@ -7,11 +7,14 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from AsteOnLine.models import Asta,Puntata,Categoria
+from GestioneUtenti.models import key as key_tab
 from django.core.urlresolvers import reverse
 from forms import carica_foto
 import datetime
 from django.utils import timezone
 from django.conf import settings
+import string
+import random
 
 def mylogin(request):
     if request.method =='POST':
@@ -32,6 +35,14 @@ def mylogin(request):
         else:
             return HttpResponseRedirect('/account')
 
+def stringa_random(length=15):
+    """
+    Genero una stringa di caratteri casuali di
+    lunghezza `length`, se non specificato 8 caratteri
+    """
+    return "".join([random.choice(string.letters) for c in xrange(length)])
+
+
 def registrazione(request):
     if request.method =='POST':
         username = request.POST['username']
@@ -43,9 +54,13 @@ def registrazione(request):
             user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name)
             user.is_active=False
             user.save()
+            key=user.username+stringa_random()
+
+            att = key_tab.objects.create(utente=user,key=key)
             subject = 'Attivazione account'
-            link = 'http://127.0.0.1:8000/account/attiva/'+str(user.id)
-            message = 'Attiva il tuo account visitando:\n'+link
+            link = reverse('GestioneUtenti:attivazione',kwargs={'key':key})
+            message = 'Attiva il tuo account visitando:\n'+'http://127.0.0.1:8000'+link
+            print(message)
             sender = 'noreply.asteonline@gmail.com'
             recipients=[email]
             send_mail(subject, message, sender, recipients)
@@ -69,12 +84,12 @@ def mylogout (request):
 def portal_main_page(request):
     return render_to_response('GestioneUtenti/profilo.html',{'request':request})
 
-def attiva(request, id_utente):
-    user=get_object_or_404(User,pk=id_utente)
-    user = User.objects.get(pk=id_utente)
-    user.is_active=True
-    user.save()
-
+def attiva(request, key):
+    att=get_object_or_404(key_tab,pk=key)
+    utente = User.objects.get(pk=att.utente.id)
+    utente.is_active=True
+    utente.save()
+    att.delete()
     info={'titolo':'Account attivato con successo','corpo':'Da adesso in poi puoi navigare liberamente'}
     return render(request,'GestioneUtenti/avviso.html',info)
 

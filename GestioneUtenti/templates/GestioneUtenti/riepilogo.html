@@ -49,7 +49,7 @@
             {% for puntata in puntate %}
                 <tr onclick="location.href='{% url 'AsteOnLine:offerta' puntata.id_asta %}'">
                     <td>{{ puntata.titolo }}</td>
-                    <td>{{ puntata.puntata|floatformat }}</td>
+                    <td>{{ puntata.puntata }}</td>
                     <td>{{ puntata.offerta_corrente }}</td>
                     <td>
                         {% if puntata.vincente %}
