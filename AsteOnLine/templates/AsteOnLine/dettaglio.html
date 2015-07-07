@@ -88,19 +88,23 @@
                 <div class="heading_bg">
                     <h2>Servizi al venditore:</h2>
                 </div>
-                <table>
-                    <tr>
-                        <td><strong>Spedire a:</strong></td>
-                        <td>{{ indirizzo|linebreaksbr }}</td>
-                    </tr>
-                </table>
-                        <form action="" id="stato_form" method="post">
-                            {% csrf_token %}
+                {% if indirizzo %}
+                    <table>
+                        <tr>
+                            <td><strong>Spedire a:</strong></td>
+                            <td>{{ indirizzo|linebreaksbr }}</td>
+                        </tr>
+                    </table>
+                            <form action="" id="stato_form" method="post">
+                                {% csrf_token %}
 
-                        <h4>Puoi modificare lo stato di avanzamento dell'ordine:
-                            {{ form.stato }}
-                            <input type="submit" class="button white" value="Modifica stato"></h4>
-                        </form>
+                            <h4>Puoi modificare lo stato di avanzamento dell'ordine:
+                                {{ form.stato }}
+                                <input type="submit" class="button white" value="Modifica stato"></h4>
+                            </form>
+                {% else %}
+                    <h4>Purtroppo non hai ricevuto offerte per quest'asta, non sono richieste ulteriori azioni da parte tua.</h4>
+            {% endif %}
             </div>
             {% endif %}
 

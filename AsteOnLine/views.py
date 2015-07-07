@@ -140,7 +140,12 @@ def offerta(request,id_asta):
         attiva=asta.attiva()
         correlati=acquisti_correlati(id_asta)
         aste_correlate=[]
-        utente=Puntata.objects.filter(asta=asta).last().utente
+        utente=Puntata.objects.filter(asta=asta).last()
+        if utente:
+            utente=utente.utente
+            indirizzo=utente.first_name+' '+utente.last_name+ '\n'+utente.indirizzo
+        else:
+            indirizzo=None
         for i in correlati:
             a=Asta.objects.get(pk=int(i))
             if a.attiva():
@@ -153,4 +158,4 @@ def offerta(request,id_asta):
 
         return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate,
                                                            'form':form,'restanti':diff,
-                                                           'indirizzo':utente.first_name+' '+utente.last_name+ '\n'+utente.indirizzo})
+                                                           'indirizzo':indirizzo})
