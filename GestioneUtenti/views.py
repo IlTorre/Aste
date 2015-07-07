@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import HttpResponseRedirect, HttpResponse
-from django.contrib.auth.models import User
+from AsteOnLine.models import MyUser as User
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from AsteOnLine.models import Asta,Puntata,Categoria
@@ -50,8 +50,13 @@ def registrazione(request):
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
+        indirizzo=request.POST['indirizzo']
+        if (username == '' or first_name=='' or last_name == '' or email  == '' or indirizzo == ''):
+            utente = {'username':username,'first_name': first_name,'last_name': last_name,'email': email,'indirizzo':indirizzo,'messaggio':'Attenzione: compila tutti i campi obbligatori!'}
+            return render(request,'GestioneUtenti/registrazione.html',utente)
         try:
-            user = User.objects.create_user(username=username,email=email,password=password,first_name=first_name,last_name=last_name)
+            user = User.objects.create_user(username=username,email=email,password=password,
+                                            first_name=first_name,last_name=last_name,indirizzo=indirizzo)
             user.is_active=False
             user.save()
             key=user.username+stringa_random()
@@ -67,7 +72,7 @@ def registrazione(request):
             info={'titolo':'Utente registrato correttamente','corpo':'Verifica la mail per attivare il tuo account'}
             return render(request, 'GestioneUtenti/avviso.html',info)
         except IntegrityError:
-            utente = {'first_name': first_name,'last_name': last_name,'email': email,'messaggio':'Attenzione username non valido'}
+            utente = {'first_name': first_name,'last_name': last_name,'email': email,'indirizzo':indirizzo,'messaggio':'Attenzione: username non valido!'}
             return render(request,'GestioneUtenti/registrazione.html',utente)
     else:
         if request.user.is_anonymous():
@@ -123,6 +128,7 @@ def riepilogo(request):
             det['scadenza']=punt.asta.data_chiusura
         det['vincente']= det['puntata'] == det['offerta_corrente']
         det['id_asta']=punt.asta.pk
+        det['stato']=punt.asta.stato
         dettagli.append(det)
 
     context={'myaste':p, 'puntate':dettagli}

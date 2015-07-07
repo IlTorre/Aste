@@ -3,6 +3,38 @@
     Main page of django_mysite.
 {% endcomment %}
 
+{% block head %}
+    <script>
+        function startTimer(duration, display) {
+            var timer = duration, days,hours,minutes, seconds;
+            setInterval(function () {
+                seconds = timer
+                days = Math.floor(seconds/(24*3600))
+                seconds=seconds-days*24*3600
+                hours = Math.floor(seconds/3600)
+                seconds=seconds-hours*3600
+                minutes = Math.floor(seconds/60)
+                seconds = seconds-minutes*60;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent =  days +" giorni, " + hours + " ore, " + minutes + " minuti e " + seconds + " secondi ";
+
+                if (--timer < 0) {
+                    timer = 0;
+                }
+            }, 1000);
+        }
+
+    window.onload = function () {
+        var restante = {{ restanti }},
+            display = document.querySelector('#time');
+        startTimer(restante, display);
+    };
+
+    </script>
+{%  endblock %}
+
 {% block body %}
         {% if asta %}
             <h1 xmlns="http://www.w3.org/1999/html">{{ asta.titolo|capfirst }}</h1>
@@ -28,6 +60,7 @@
                 </p>
 
                 {% if attiva %}
+                    <h4>L'asta scade tra:<br/> <span id="time"></span><br/> Affrettati!</h4>
                     <form action="" id="offerta_form" method="post">
                         {% csrf_token %}
                         <fieldset>
@@ -50,6 +83,26 @@
                     <strong><h4>Offerta scaduta </h4></strong>
                 {% endif %}
             </div>
+            {% if not attiva and request.user == asta.creatore %}
+            <div class="one last">
+                <div class="heading_bg">
+                    <h2>Servizi al venditore:</h2>
+                </div>
+                <table>
+                    <tr>
+                        <td><strong>Spedire a:</strong></td>
+                        <td>{{ indirizzo|linebreaksbr }}</td>
+                    </tr>
+                </table>
+                        <form action="" id="stato_form" method="post">
+                            {% csrf_token %}
+
+                        <h4>Puoi modificare lo stato di avanzamento dell'ordine:
+                            {{ form.stato }}
+                            <input type="submit" class="button white" value="Modifica stato"></h4>
+                        </form>
+            </div>
+            {% endif %}
 
             <div style="clear:both"></div>
             <div class="one last">

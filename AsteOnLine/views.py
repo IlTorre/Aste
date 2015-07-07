@@ -1,19 +1,17 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse
-from django.template import RequestContext, loader
+
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
-from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+import datetime
 from django.core.mail import send_mail
-from forms import ContactForm
-from operator import itemgetter
-from .models import Asta, Categoria, Puntata
+from forms import ContactForm, StatoForm
+from .models import Asta, Categoria, Puntata, MyUser as User
 
 
 class Home(generic.ListView):
@@ -113,29 +111,38 @@ def acquisti_correlati(id_acquisto):
 def offerta(request,id_asta):
     asta=get_object_or_404(Asta,pk=id_asta)
     if request.method=='POST':
-        off=request.POST["offerta"]
-        if request.user == asta.creatore:
-            info={'titolo':'Operazione non permessa','corpo':'Non puoi votare alle tue aste'}
-            return render(request,'GestioneUtenti/avviso.html',info)
-        elif asta.data_chiusura < timezone.now():
-            info={'titolo':'Operazione non permessa','corpo':'Non puoi votare a un asta scaduta'}
-            return render(request,'GestioneUtenti/avviso.html',info)
-        elif asta.offerta_corrente >= float(off):
-            info={'titolo':'Operazione non permessa','corpo':'Offerta minima non superata'}
-            return render(request,'GestioneUtenti/avviso.html',info)
-        else:
+        if asta.attiva():
+            off=request.POST["offerta"]
+            if request.user == asta.creatore:
+                info={'titolo':'Operazione non permessa','corpo':'Non puoi votare alle tue aste'}
+                return render(request,'GestioneUtenti/avviso.html',info)
+            elif asta.offerta_corrente >= float(off):
+                info={'titolo':'Operazione non permessa','corpo':'Offerta minima non superata'}
+                return render(request,'GestioneUtenti/avviso.html',info)
+            else:
 
-            asta.offerta_corrente=off
-            asta.save()
-            puntata=Puntata.objects.create(asta=asta,utente=request.user,importo=off)
-            puntata.save()
-            return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
+                asta.offerta_corrente=off
+                asta.save()
+                puntata=Puntata.objects.create(asta=asta,utente=request.user,importo=off)
+                puntata.save()
+        else:
+            if request.user == asta.creatore:
+                form=StatoForm(request.POST,instance=asta)
+                form.save()
+            else:
+                info={'titolo':'Operazione non permessa','corpo':'Non puoi votare a un asta scaduta'}
+                return render(request,'GestioneUtenti/avviso.html',info)
+
+        return HttpResponseRedirect(reverse('GestioneUtenti:riepilogo'))
     else:
+        diff=int((asta.data_chiusura-timezone.now()).total_seconds())
+        form = StatoForm(instance=asta)
         attiva=asta.attiva()
         correlati=acquisti_correlati(id_asta)
         aste_correlate=[]
+        utente=Puntata.objects.filter(asta=asta).last().utente
         for i in correlati:
-            a=Asta.objects.filter(pk=int(i)).last()
+            a=Asta.objects.get(pk=int(i))
             if a.attiva():
                 aste_correlate.append(a)
         if len(aste_correlate)>0:
@@ -144,4 +151,6 @@ def offerta(request,id_asta):
             except ValueError:
                 pass
 
-        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate})
+        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate,
+                                                           'form':form,'restanti':diff,
+                                                           'indirizzo':utente.first_name+' '+utente.last_name+ '\n'+utente.indirizzo})

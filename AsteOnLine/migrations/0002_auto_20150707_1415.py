@@ -15,12 +15,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='asta',
-            name='offerta_corrente',
-            field=models.DecimalField(default=0.01, max_digits=8, decimal_places=2),
+            name='stato',
+            field=models.CharField(default=(b'INPREPARAZIONE', b'In preparazione'), max_length=14, choices=[(b'INPREPARAZIONE', b'In preparazione'), (b'SPEDITO', b'Spedito'), (b'RICEVUTO', b'Ricevuto')]),
         ),
         migrations.AlterField(
             model_name='asta',
             name='data_chiusura',
-            field=models.DateTimeField(default=datetime.datetime(2015, 7, 8, 7, 56, 29, 81000, tzinfo=utc)),
+            field=models.DateTimeField(default=datetime.datetime(2015, 7, 8, 12, 15, 29, 687000, tzinfo=utc)),
         ),
     ]

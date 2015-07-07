@@ -6,7 +6,7 @@
 {% block body %}
     <h1>{{ categoria.nome|capfirst }}</h1>
     <h4>
-    {{ categoria.descrizione }}
+    {{ categoria.descrizione|capfirst }}
     </h4>
     <div style="clear:both; height: 40px"></div>
     {% if aste %}

@@ -14,9 +14,26 @@
     <div class="one-half last">
         <div class="heading_bg">
             <h2>Riepilogo dati personali:</h2>
-            <p><strong>Nome:</strong> {{ request.user.first_name }}</p>
-            <p><strong>Cognome:</strong> {{ request.user.last_name }}</p>
-            <p><strong>Mail:</strong> {{ request.user.email }}</p>
+
+            <table>
+                <tr>
+                    <td><strong>Nome:</strong></td>
+                    <td>{{ request.user.first_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Cognome:</strong></td>
+                    <td>{{ request.user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Email:</strong></td>
+                    <td>{{ request.user.email }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Indirizzo:</strong></td>
+                    <td>{{ request.user.indirizzo|linebreaksbr }}</td>
+                </tr>
+            </table>
+            
         </div>
     </div>
 {% endblock %}

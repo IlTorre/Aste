@@ -1,10 +1,10 @@
 from django.test import TestCase
 from .models import Categoria,Puntata,Asta
-from django.contrib.auth.models import User
+from AsteOnLine.models import MyUser as User
 from django.utils import timezone
 import datetime
 from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate,login
+
 from django.test import Client
 
 # Create your tests here.
@@ -99,9 +99,9 @@ class QuestionViewTests(TestCase):
     def test_puntate_asta_attiva (self):
         """
         controlla le operazioni di voto alle aste:
-            un utente non puù votare alle sue aste
+            un utente non puo' votare alle sue aste
             che l'inserimento corretto sia accettato
-            un utente non può votare immettendo un importo monore rispetto l'ultima offerta fatta
+            un utente non puo' votare immettendo un importo monore rispetto l'ultima offerta fatta
         """
         user = create_user('pippo')
         c = Client()

@@ -1,10 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,AbstractUser,PermissionsMixin
 from django.utils import timezone
 import datetime
 import os
 from django.conf import settings
 # Create your models here.
+
+class MyUser (AbstractUser):
+    indirizzo=models.TextField(max_length=200,default='Vuoto')
+
+
 def get_catName(istanza,file):
     return os.path.join('foto_categorie',
                         str(timezone.datetime.date(timezone.now())),
@@ -27,8 +32,9 @@ def get_nome (istanza,file):
                         str(timezone.datetime.time(timezone.now())).replace(':','_').replace('.','_')+os.path.splitext(file)[1]
                         )
 
+SCELTE_STATO=(('In preparazione','In preparazione'),('Spedito','Spedito'),('Ricevuto','Ricevuto'))
 class Asta (models.Model):
-    creatore = models.ForeignKey(User)
+    creatore = models.ForeignKey(MyUser)
     titolo = models.CharField(max_length=140)
     descrizione = models.TextField(max_length=600)
     foto = models.ImageField(upload_to=get_nome, default=settings.NO_MEDIA)
@@ -37,6 +43,8 @@ class Asta (models.Model):
     categoria= models.ForeignKey(Categoria)
     base_asta = models.DecimalField(max_digits=8,decimal_places=2,default=0.10)
     offerta_corrente = models.DecimalField(max_digits=8,decimal_places=2,default=0.00)
+    stato = models.CharField(max_length=15, choices=SCELTE_STATO, default=SCELTE_STATO[0])
+
 
     def image_tag(self):
         return u'<p align ="center"><img src="%s" width ="100px" align ="middle"/></p>' % self.foto.url
@@ -55,7 +63,7 @@ class Asta (models.Model):
 class Puntata (models.Model):
     importo = models.DecimalField(max_digits=8,decimal_places=2)
     data = models.DateTimeField(default=timezone.now)
-    utente = models.ForeignKey(User)
+    utente = models.ForeignKey(MyUser)
     asta = models.ForeignKey(Asta)
 
     class Meta:
