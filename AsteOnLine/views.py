@@ -1,23 +1,27 @@
-from django.shortcuts import render
-
-# Create your views here.
-
+# -*- coding: utf-8 -*
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-import datetime
 from django.core.mail import send_mail
 from forms import ContactForm, StatoForm
-from .models import Asta, Categoria, Puntata, MyUser as User
+from .models import Asta, Categoria, Puntata
 
 
 class Home(generic.ListView):
+    """
+    Classe che tramite i generics di Django implementa la visualizzazione dell'home page del sito
+    """
     template_name = 'AsteOnLine/index.html'
     context_object_name = 'aste_recenti'
     def get_queryset(self):
+        """
+        Definisce cosa passare al template:
+        una lista di 5 aste ordinate in ordine decrescente per data di chiusura
+        :return: la lista
+        """
         contenuto = Asta.objects.order_by('-data_chiusura')
         p=[]
         c=0
@@ -31,12 +35,25 @@ class Home(generic.ListView):
         return p
 
 class Categorie (generic.ListView):
+    """
+    Classe che tramite i generics di Django implementa la visualizzazione per categorie del sito
+    """
     template_name = 'AsteOnLine/categorie.html'
     context_object_name = 'categorie'
     def get_queryset(self):
+        """
+        Ricava la lista delle categorie
+        :return: la lista
+        """
         return Categoria.objects.all().order_by('nome')
 
 def dettaglio_categoria(request,id_categoria):
+    """
+    Visualizza le aste attive presenti all'interno della categoria
+    :param request: la request
+    :param id_categoria: l'id della categoria
+    :return: il render del template con le aste ricavate
+    """
     aste=Asta.objects.filter(categoria=id_categoria).order_by('-data_apertura')
     l=[]
     for a in aste:
@@ -50,6 +67,11 @@ def dettaglio_categoria(request,id_categoria):
 
 
 def contatti (request):
+    """
+    Visualizza il form di contatto in caso di get mentre in caso di post invia la mail.
+    :param request: la richiesta
+    :return: il render del template corretto a seconda dell'operazione
+    """
     if request.method == 'POST': # If the form has been submitted...
         form = ContactForm(request.POST) #form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -73,8 +95,8 @@ def contatti (request):
 
 def acquisti_correlati(id_acquisto):
     '''
-    Ricava i suggerimenti di acquisto
-    :param id_acquisto: e' l'id dell'oggetto osservato per il quale si vogliono ricavare le raccomandation
+    Ricava i suggerimenti di acquisto conteggiando gli utenti che hanno votato altre aste oltre a quella passata.
+    :param id_acquisto: e' l'id dell'oggetto osservato per il quale si vogliono ricavare le recommendation
     :return: ritorna una lista di oggetti correlati
     '''
     utenti=Puntata.objects.filter(asta=Asta.objects.filter(pk=id_acquisto).last()).values_list('utente')
@@ -97,6 +119,12 @@ def acquisti_correlati(id_acquisto):
     fin=fin.values()
 
     def confronto(x,y):
+        """
+        Definisce la modalità di confronto di due aste.
+        :param x: prima asta
+        :param y: seconda asta
+        :return: il valore della differenza tra i contatori di utenti vontanti delle due aste
+        """
         return y[1]-x[1]
 
     fin.sort(cmp=confronto)
@@ -109,6 +137,22 @@ def acquisti_correlati(id_acquisto):
 
 @login_required(login_url='/account/login')
 def offerta(request,id_asta):
+    """
+    Gestisce il dettaglio di un asta.
+
+    In caso di get:
+        effettua il render del template passando i dati dell'asta, i secondi rimanenti alla scadenza dell'asta e
+        eventualmente se è presente un utente che si è aggiudicato l'asta.
+    In caso di post:
+        se l'asta è attiva
+            effettua un offerta controllando che sia valida e che l'utente possa effettuarla
+        se l'asta non è attiva:
+            controlla che l'utente che effettua l'operazione sia il proprietario dell'asta
+            e modifica lo stato dell'ordine.
+    :param request: la request
+    :param id_asta: l'id dell'asta
+    :return: il render
+    """
     asta=get_object_or_404(Asta,pk=id_asta)
     if request.method=='POST':
         if asta.attiva():

@@ -1,22 +1,32 @@
+# -*- coding: utf-8 -*
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import HttpResponseRedirect, HttpResponse
+from django.shortcuts import HttpResponseRedirect
 from AsteOnLine.models import MyUser as User
 from django.db import IntegrityError
 from django.core.mail import send_mail
-from AsteOnLine.models import Asta,Puntata,Categoria
+from AsteOnLine.models import Asta,Puntata
 from GestioneUtenti.models import key as key_tab
 from django.core.urlresolvers import reverse
 from forms import carica_foto
 import datetime
 from django.utils import timezone
-from django.conf import settings
 import string
 import random
 
 def mylogin(request):
+    """
+    Gestisce il login:
+    In caso di get
+        effettua il render del template se l'utente che effettua la richiesta non è autenticato, in caso contrario
+        redireziona al profilo
+    In caso di post
+        Autentica l'utente con le opportune verifiche
+    :param request: la richiesta
+    :return: il render del template corretto
+    """
     if request.method =='POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -35,15 +45,29 @@ def mylogin(request):
         else:
             return HttpResponseRedirect('/account')
 
+
 def stringa_random(length=15):
     """
     Genero una stringa di caratteri casuali di
-    lunghezza `length`, se non specificato 8 caratteri
+    lunghezza `length`, se non specificato 15 caratteri
+    :param length: la lunghezza
+    :return: la stringa casuale
     """
     return "".join([random.choice(string.letters) for c in xrange(length)])
 
 
 def registrazione(request):
+    """
+    Gestisce la registrazione di un utente
+    In caso di get:
+        mostra il render del template di registrazione se l'utente non è autenticato,
+        in caso contrario lo redireziona al profilo
+    In caso di post:
+        Recupera i dati dal form, crea un utente inattivo, genera il token di attivazione dell'utente e spedisce una mail per la verifica
+        effettuando i controlli opportuni.
+    :param request: la richiesta
+    :return: il render del template corretto
+    """
     if request.method =='POST':
         username = request.POST['username']
         password = request.POST['password1']
@@ -65,7 +89,6 @@ def registrazione(request):
             subject = 'Attivazione account'
             link = reverse('GestioneUtenti:attivazione',kwargs={'key':key})
             message = 'Attiva il tuo account visitando:\n'+'http://127.0.0.1:8000'+link
-            print(message)
             sender = 'noreply.asteonline@gmail.com'
             recipients=[email]
             send_mail(subject, message, sender, recipients)
@@ -81,15 +104,33 @@ def registrazione(request):
             return HttpResponseRedirect(reverse('GestioneUtenti:profilo'))
 
 def mylogout (request):
+    """
+    Permette all'utente che effettua la richiesta di uscire dalla sessione
+    :param request: la richiesta
+    :return: il render alla pagina di login
+    """
     logout(request)
     return HttpResponseRedirect(reverse('GestioneUtenti:login'))
 
 
 @login_required(login_url='/account/login')
 def portal_main_page(request):
+    """
+    Gestisce la pagina personale.
+    :param request: la richiesta
+    :return: il render del template
+    """
     return render_to_response('GestioneUtenti/profilo.html',{'request':request})
 
 def attiva(request, key):
+    """
+    Gestisce l'attivazione dell'utente (link all'interno della mail)
+        ricava la chiave (se esiste) dal db, e attiva l'utente associato.
+        Al termine rimuove dal db la chiave
+    :param request: la richiesta
+    :param key: la chiave di attivazione
+    :return: il render del template
+    """
     att=get_object_or_404(key_tab,pk=key)
     utente = User.objects.get(pk=att.utente.id)
     utente.is_active=True
@@ -100,6 +141,12 @@ def attiva(request, key):
 
 @login_required(login_url='/account/login')
 def riepilogo(request):
+    """
+    Gestisce la schermata di riepilogo delle aste (inserite o partecipate) di un utente.
+    Ricava tutte le aste create dall'utente e tutte le puntate che ha fatto, indicando il vincitore e se l'asta è scaduta.
+    :param request:
+    :return: il render del template
+    """
     utente=request.user
     myaste=Asta.objects.filter(creatore=utente)
     ast=myaste.values()
@@ -136,6 +183,15 @@ def riepilogo(request):
 
 @login_required(login_url='/account/login')
 def nuovaAsta(request):
+    """
+    Gestisce l'inserimento di una nuova asta.
+    Se la richiesta è una get:
+        mostra il form da compilare
+    Se la richiesta è una post:
+        verifica che il form sia valido e crea l'asta adattando i dati ricevuti dalle form html
+    :param request:
+    :return:
+    """
     if request.method == 'GET':
         form=carica_foto()
         return render(request, 'GestioneUtenti/nuova_asta.html',{'form':form})

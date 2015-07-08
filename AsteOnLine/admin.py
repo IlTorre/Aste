@@ -7,6 +7,9 @@ from django.contrib.auth.forms import UserChangeForm,UserCreationForm
 admin.site.register(Categoria)
 
 class TutteAste (admin.ModelAdmin):
+    """
+    Classe che definisce la visualizzazione delle aste nel lato amministrativo
+    """
     fieldsets = [
         ('Utente:',{'fields':['creatore']}),
         ('Descrizione asta:',{'fields':['titolo','foto','descrizione','categoria']}),
@@ -18,23 +21,38 @@ class TutteAste (admin.ModelAdmin):
     ordering = ['-data_chiusura','data_apertura']
 
 class TuttePuntate(admin.ModelAdmin):
+    """
+    Classe che definisce la visualizzazione delle puntate nel lato amministrativo
+    """
     list_display = ('asta','utente','data','importo')
     ordering = ['asta','-data']
 
 class TokenAttivazione (admin.ModelAdmin):
+    """
+    Classe che definisce la visualizzazione dei token di attivazione nel lato amministrativo
+    """
     list_display = ('utente','key')
 
 class CustomUserChangeForm (UserChangeForm):
+    """
+    Classe che definisce la modifica di un utente nel lato amministrativo
+    """
     class Meta(UserChangeForm.Meta):
         model = MyUser
 
 
 class CustomUserCreationForm (UserCreationForm):
+    """
+    Classe che definisce la creazione di un utente nel lato amministrativo
+    """
     class Meta:
         model = MyUser
         fields = ('username','email','first_name','last_name','password','indirizzo','is_active','is_superuser')
 
 class Utenti (UserAdmin):
+    """
+    Classe che definisce la visualizzazione degli utenti nel lato amministrativo
+    """
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
     list_display = ('username','email','indirizzo','is_active','is_superuser')
