@@ -153,9 +153,10 @@ def riepilogo(request):
     p=[]
     for i in xrange(len(myaste)):
         a=ast[i]
-        print a
         if a['data_chiusura']<=timezone.now():
             a['data_chiusura']='Scaduta'
+        else:
+            a['stato']='Asta in corso'
         try:
             a['vincente']=Puntata.objects.filter(asta=myaste[i]).last().utente.username
         except AttributeError:
@@ -171,11 +172,12 @@ def riepilogo(request):
         det['puntata']=punt.importo
         if punt.asta.data_chiusura <= timezone.now():
             det['scadenza']='Scaduta'
+            det['stato']=punt.asta.stato
         else:
             det['scadenza']=punt.asta.data_chiusura
+            det['stato']='Asta in corso'
         det['vincente']= det['puntata'] == det['offerta_corrente']
         det['id_asta']=punt.asta.pk
-        det['stato']=punt.asta.stato
         dettagli.append(det)
 
     context={'myaste':p, 'puntate':dettagli}
