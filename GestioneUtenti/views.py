@@ -170,12 +170,17 @@ def riepilogo(request):
         det['offerta_corrente']=Puntata.objects.filter(asta=astx).last().importo
         det['titolo']= punt.asta.titolo
         det['puntata']=punt.importo
+        det['vincente']= det['puntata'] == det['offerta_corrente']
         if punt.asta.data_chiusura <= timezone.now():
             det['scadenza']='Scaduta'
-            det['stato']=punt.asta.stato
+            if det['vincente']:
+                det['stato']=punt.asta.stato
+            else:
+                det['stato']="Non sei il vincitore dell'asta"
         else:
             det['scadenza']=punt.asta.data_chiusura
             det['stato']='Asta in corso'
+
         det['vincente']= det['puntata'] == det['offerta_corrente']
         det['id_asta']=punt.asta.pk
         dettagli.append(det)
