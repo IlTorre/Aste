@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.core.mail import send_mail
 from forms import ContactForm, StatoForm
-from .models import Asta, Categoria, Puntata
+from .models import Asta, Categoria, Puntata, MyUser as User
 
 
 class Home(generic.ListView):
@@ -19,10 +19,11 @@ class Home(generic.ListView):
     def get_queryset(self):
         """
         Definisce cosa passare al template:
-        una lista di 5 aste ordinate in ordine decrescente per data di chiusura
+        una lista di 5 aste ordinate in ordine di data di chiusura
+        in modo da mostrare le aste con scadenza a breve
         :return: la lista
         """
-        contenuto = Asta.objects.order_by('-data_chiusura')
+        contenuto = Asta.objects.order_by('data_chiusura')
         p=[]
         c=0
         for a in contenuto:
@@ -93,16 +94,17 @@ def contatti (request):
         form = ContactForm() # An unbound form
         return render(request, 'AsteOnLine/contatti.html', { 'form': form })
 
-def acquisti_correlati(id_acquisto):
+def acquisti_correlati(id_acquisto,osservatore):
     '''
-    Ricava i suggerimenti di acquisto conteggiando gli utenti che hanno votato altre aste oltre a quella passata.
+    Ricava i suggerimenti di acquisto conteggiando gli utenti (escluso l'osservatore) che hanno votato altre aste oltre
+    a quella passata.
     :param id_acquisto: e' l'id dell'oggetto osservato per il quale si vogliono ricavare le recommendation
+    :param osservatore: l'utente che sta osservando la pagina
     :return: ritorna una lista di oggetti correlati
     '''
-    utenti=Puntata.objects.filter(asta=Asta.objects.filter(pk=id_acquisto).last()).values_list('utente')
-
+    utenti=Puntata.objects.filter(asta=Asta.objects.get(pk=id_acquisto)).exclude(utente=osservatore).values_list('utente')
+    osservatore= User.objects.get(pk=osservatore.id)
     utenti=set(utenti)
-
     l=[]
     for u in utenti:
         aste=Puntata.objects.filter(utente=u).values_list('asta')
@@ -131,7 +133,6 @@ def acquisti_correlati(id_acquisto):
     l=[]
     for a in fin:
         l.append(a[0])
-
     return l
 
 
@@ -182,7 +183,7 @@ def offerta(request,id_asta):
         diff=int((asta.data_chiusura-timezone.now()).total_seconds())
         form = StatoForm(instance=asta)
         attiva=asta.attiva()
-        correlati=acquisti_correlati(id_asta)
+        correlati=acquisti_correlati(id_asta,request.user)
         aste_correlate=[]
         utente=Puntata.objects.filter(asta=asta).last()
         if utente:
@@ -200,6 +201,6 @@ def offerta(request,id_asta):
             except ValueError:
                 pass
 
-        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate,
+        return render(request,'AsteOnLine/dettaglio.html',{'asta':asta,'attiva':attiva,'correlati':aste_correlate[:5],
                                                            'form':form,'restanti':diff,
                                                            'indirizzo':indirizzo})

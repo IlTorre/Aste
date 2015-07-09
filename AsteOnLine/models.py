@@ -65,7 +65,7 @@ class Asta (models.Model):
     """
     creatore = models.ForeignKey(MyUser)
     titolo = models.CharField(max_length=140)
-    descrizione = models.TextField(max_length=600)
+    descrizione = models.TextField(max_length=900)
     foto = models.ImageField(upload_to=get_nome, default=settings.NO_MEDIA)
     data_apertura = models.DateTimeField(default=timezone.now)
     data_chiusura = models.DateTimeField(default=timezone.now()+datetime.timedelta(days=1))
