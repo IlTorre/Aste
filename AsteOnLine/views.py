@@ -119,17 +119,7 @@ def acquisti_correlati(id_acquisto,osservatore):
         else:
             fin[kk]=[kk,1]
     fin=fin.values()
-
-    def confronto(x,y):
-        """
-        Definisce la modalità di confronto di due aste.
-        :param x: prima asta
-        :param y: seconda asta
-        :return: il valore della differenza tra i contatori di utenti vontanti delle due aste
-        """
-        return y[1]-x[1]
-
-    fin.sort(cmp=confronto)
+    fin.sort(lambda x,y: cmp(y[1],x[1])) #Funzione anonima per l'ordinmento
     l=[]
     for a in fin:
         l.append(a[0])
