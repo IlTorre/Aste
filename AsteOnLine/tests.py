@@ -5,7 +5,6 @@ from AsteOnLine.models import MyUser as User
 from django.utils import timezone
 import datetime
 from django.core.urlresolvers import reverse
-
 from django.test import Client
 
 # Create your tests here.
@@ -16,8 +15,7 @@ def create_user(username='user'):
     :param username: username dell'utente che si vuole creare
     :return: un utente
     """
-
-    user = User.objects.create_user(username=username,password=username)
+    user = User.objects.create_user(username=username,password=username,indirizzo='Via Fasulla')
     return user
 
 def create_asta(creatore,categoria,data_chiusura,titolo='Prova',descrizione='Descrizione di prova',base_asta=1):
